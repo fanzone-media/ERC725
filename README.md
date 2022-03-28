@@ -1,26 +1,97 @@
-# ERC 725 &middot; [![npm version](https://img.shields.io/npm/v/@erc725/smart-contracts.svg?style=flat)](https://www.npmjs.com/package/@erc725/smart-contracts)
+# @erc725/smart-contracts &middot; [![npm version](https://img.shields.io/npm/v/@erc725/smart-contracts.svg?style=flat)](https://www.npmjs.com/package/@erc725/smart-contracts)
 
-Repository for the code and standard documents around ERC725 and related standards
 
-## ERC 725 Use Cases
+**This package is currently in BETA, use with caution!**
 
-Projects building on ERC725 are invited to add themselves to the table [here](https://github.com/ERC725Alliance/ERC725/blob/master/docs/use-cases.md).
+This package contains an implementation of ERC725 to make it as easy as possible to get started.\
+If you see ways to improve this implementation, you are welcome to create an issue or a pull request.
 
-## ERC Draft Documents
+The package has the following contracts:
 
-- [ERC725](https://github.com/ERC725Alliance/ERC725/blob/master/docs/ERC-725.md)
-- [ERC734](https://github.com/ERC725Alliance/ERC725/blob/master/docs/ERC-734.md)
+- `ERC725X.sol`: The execute part of ERC725, allows to execute any other smart contract. Uses [ERC173](https://eips.ethereum.org/EIPS/eip-173) as a basis.
+- `ERC725Y.sol`: The data part of ERC725, allows to attach any key-value data to a smart contract. Uses [ERC173](https://eips.ethereum.org/EIPS/eip-173) as a basis.
+- `ERC725.sol`: Combines both implementations: `ERC725X.sol` and `ERC725Y.sol`.
 
-## Interfaces and Implementations
 
-The default interfaces and implementations can be found in the [implementations](https://github.com/ERC725Alliance/ERC725/tree/master/implementations) folder:
+## Usage
 
-## Discussion
+To use in your project install via npm
 
-The main discussion around ERC725 is happening in the [EIP repository issue](https://github.com/ethereum/EIPs/issues/725).
+```
+npm install @erc725/smart-contracts
+```
 
-Specific implementation discussions should happen in the [issues of this repo](https://github.com/ERC725Alliance/ERC725/issues).  
+And import in your contracts in solidity
 
-## License
+```solidity
+import "@erc725/smart-contracts/contracts/ERC725.sol";
 
-ERC725 is [Apache 2.0 licensed](./LICENSE).
+contract MyContract is ERC725 {
+    ...
+}
+```
+
+And import in your contract ABI in JavaScript
+
+```js
+import ERC725 from "@erc725/smart-contracts/artifacts/ERC725.json";
+
+const myContract = new web3.eth.Contract(ERC725.abi, "0xsomeaddress...");
+```
+
+## Development
+
+Setup:
+
+```
+npm install
+```
+
+Run tests:
+
+```
+npm test
+```
+
+Run linter:
+
+```
+npm run lint
+```
+
+## Technical References
+
+### Interface IDs
+
+The table below contains a list of [ERC165]() interface IDs used by the [Solidity implementations of the ERC725 smart contracts]().
+
+| Interface Name                                                                                                            | Interface ID | Description                                             |
+| :------------------------------------------------------------------------------------------------------------------------ | :----------- | :------------------------------------------------------ |
+| ERC725X                                                                                                                   | `0x44c028fe` | General executor                                        |
+| ERC725Y                                                                                                                   | `0x5a988c0f` | General key-value store                                 |
+| [ERC165](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-165.md)                                                    | `0x01ffc9a7` | Standard Interface Detection for Contracts              |
+
+
+### Solc Contract details
+
+> **Notice:** you need the `solc` compiler installed locally to use this command. [Installation instructions can be found in the solidity documentation](https://docs.soliditylang.org/en/v0.8.9/installing-solidity.html)
+
+The repository offers a shell utility tool that generate details about each contracts (function selectors, storage layout, evm opcodes...). You can obtain them via the following command.
+
+```bash
+npm run solc
+```
+
+This will generate files and folders under `/solc`
+
+```
+solc
+ |- bytecode/
+ |- evm/
+ |- metadata/
+ |- opcodes/
+ |- selectors/
+ |- storage-layout/
+ |- gas-costs.md
+
+```
